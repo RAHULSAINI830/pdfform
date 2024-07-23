@@ -1,0 +1,1378 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF Viewer</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #000;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        #navbar {
+            width: 100%;
+            background-color: #000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            box-shadow: 0 4px 8px rgba(90, 88, 88, 0.5);
+            position: relative;
+            z-index: 10;
+        }
+
+        #navbar .logo {
+            display: flex;
+            align-items: center;
+            margin: 0 0px 10px 100px;
+        }
+
+        #navbar .logo img {
+            height: 50px;
+            margin-right: 10px;
+        }
+
+        #navbar .zentrades {
+            font-size: 16px;
+            font-weight: normal;
+            align-self: flex-end;
+        }
+
+        #navbar .menu {
+            display: flex;
+            align-items: center;
+            list-style: none;
+            padding: 0;
+            margin-top: 0px;
+        }
+
+        #navbar .menu li {
+            margin: 0 20px;
+            position: relative;
+        }
+
+        #navbar .menu li a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 18px;
+            transition: color 0.3s;
+        }
+
+        #navbar .menu li a:hover {
+            color: #ee5566;
+        }
+
+        #navbar .dropdown:hover .dropdown-content,
+        #navbar .dropdown .dropdown-content:hover {
+            display: flex;
+        }
+
+        #navbar .dropdown:hover .dropdown-content1,
+        #navbar .dropdown .dropdown-content1:hover {
+            display: flex;
+        }
+
+        #navbar .dropdown .dropdown-content {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 40%;
+            transform: translateX(-50%);
+            width: 10000%;
+            max-width: 1400px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+            border-radius: 0 0 10px 10px;
+            z-index: 20;
+            flex-direction: row;
+            justify-content: space-between;
+            background-color: #222;
+            margin-top: 20px;
+        }
+
+        #navbar .dropdown .dropdown-content1 {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: -100%;
+            transform: translateX(-50%);
+            width: 10000%;
+            max-width: 1400px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+            border-radius: 0 0 10px 10px;
+            z-index: 20;
+            flex-direction: row;
+            justify-content: space-between;
+            background-color: #222;
+            margin-top: 20px;
+        }
+
+        .features-container,
+        .resources-container {
+            display: flex;
+            justify-content: center;
+            width: 100%;
+        }
+
+        .feature-column,
+        .resources-column {
+            display: flex;
+            flex-direction: column;
+            width: 33%;
+            padding: 10px;
+        }
+
+        .feature-item,
+        .resources-item {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            margin-bottom: 20px;
+            background-color: #222;
+            padding: 10px;
+            border-radius: 10px;
+            transition: transform 0.3s, border 0.3s;
+        }
+
+        .feature-item:hover,
+        .resources-item:hover {
+            transform: scale(1.05);
+            border: 2px solid #ee5566;
+        }
+
+        .feature-item .icon img,
+        .resources-item .icon img {
+            height: 30px;
+            margin-right: 10px;
+        }
+
+        .get-demo {
+            background-color: #ee5566;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-right: 100px;
+            margin-top: -15px;
+        }
+
+        .get-demo:hover {
+            background-color: #d7444a;
+        }
+
+        .get-demo1 {
+            background-color: #ee5566;
+            color: #141313;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .get-demo1:hover {
+            background-color: #d7444a;
+        }
+
+        #hero-section {
+            display: flex;
+            width: 90%;
+            height: 350px;
+            background-color: #000;
+            color: #fff;
+            padding: 20px;
+            box-sizing: border-box;
+            margin-bottom: 40px;
+            margin-top: 40px;
+        }
+
+        #hero-section .left-section {
+            flex: 7;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            text-align: left;
+            padding-right: 20px;
+        }
+
+        #hero-section .left-section h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        #hero-section .left-section p {
+            font-size: 1.2em;
+            color: #ddd;
+            margin-bottom: 10px;
+        }
+
+        #hero-section .left-section .search-container {
+            display: flex;
+            width: 100%;
+            max-width: 400px;
+            margin-top: 15px;
+        }
+
+        #hero-section .left-section input[type="text"] {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px 0 0 5px;
+            background-color: #333;
+            color: #fff;
+        }
+
+        #hero-section .left-section button {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-left: none;
+            border-radius: 0 5px 5px 0;
+            background-color: #ee5566;
+            color: #fff;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        #hero-section .left-section button:hover {
+            background-color: #ee5566;
+        }
+
+        #hero-section .right-section {
+            flex: 3;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            background: linear-gradient(#ee5566, #0a0a0a);
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        #hero-section .right-section h2 {
+            color: #fff;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        #hero-section .right-section p {
+            color: #ddd;
+            margin-bottom: 20px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        #hero-section .right-section button {
+            background-color: #fff;
+            color: #070707;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+            border: 2px solid rgb(255, 255, 255);
+            font-size: large;
+        }
+
+        #hero-section .right-section button:hover {
+            background-color: #ee5566;
+            color: #fff;
+        }
+
+        #main-container {
+            display: flex;
+            justify-content: center;
+            width: 100%;
+            max-width: 1200px;
+            margin-bottom: 20px;
+            flex: 1;
+        }
+
+        #pdf-list-container {
+            flex: 0 0 20%;
+            background-color: #222;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+            margin-right: 10px;
+            overflow-y: auto;
+            border: 1px solid #444;
+        }
+
+        #pdf-renderer-container {
+            flex: 0 0 80%;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            background-color: #222;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+            height: 600px;
+            /* Fixed height to match iframe */
+            border: 1px solid #444;
+        }
+
+        #pdf-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            max-height: 100%;
+            /* Ensure it uses the available space */
+        }
+
+        #pdf-list li {
+            margin-bottom: 15px;
+        }
+
+        #pdf-list button {
+            width: 100%;
+            padding: 10px 20px;
+            font-size: 16px;
+            color: #fff;
+            background-color: #444;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s, transform 0.3s;
+            text-align: left;
+            /* Align text to the left */
+            word-wrap: break-word;
+            /* Enable word wrapping */
+            white-space: normal;
+            /* Allow text to wrap to the next line */
+        }
+
+        #pdf-list button:hover {
+            background-color: #666;
+            transform: scale(1.05);
+        }
+
+        #pdf-frame {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background-color: #fff;
+            margin-bottom: 20px;
+        }
+
+        #print-button {
+            padding: 10px 20px;
+            font-size: 16px;
+            color: #fff;
+            background-color: #ee5566;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        #print-button:hover {
+            background-color: #d7444a;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgb(0, 0, 0);
+            background-color: rgba(0, 0, 0, 0.4);
+            padding-top: 60px;
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 500px;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        footer {
+            width: 100%;
+            max-width: 1200px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            padding: 20px;
+            background-color: #000;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+            /* Smoky shadow effect */
+        }
+
+        .contact-info {
+            width: 250px;
+            /* Adjust the width here */
+            height: 400px;
+            padding: 40px 20px;
+            /* Adjust the padding for more height */
+            background: #b5b3b394;
+            /* Semi-transparent background */
+            border-radius: 15px;
+            backdrop-filter: blur(15px);
+            /* Blur effect */
+            box-shadow: -1px 0px 23px 9px rgba(0, 0, 0, 0.57);
+            /* Smoky shadow effect */
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 20px;
+            /* Adjust margin for spacing */
+        }
+
+        .contact-item {
+            margin-bottom: 30px;
+            /* Adjust margin for spacing between items */
+            position: relative;
+            z-index: 1;
+        }
+
+        .contact-item h4 {
+            margin: 10px 0;
+            font-size: 22px;
+            /* Increased font size */
+            color: #fff;
+            font-weight: 100;
+            /* Thinner text */
+            position: relative;
+        }
+
+        .contact-item p {
+            margin: 0;
+            font-size: 15px;
+            /* Increased font size */
+            color: #fff;
+            font-weight: 100;
+            /* Thinner text */
+        }
+
+        .recognition {
+            margin: 30px 0;
+            /* Adjust margin for spacing around recognition text */
+            font-size: 15px;
+            /* Increased font size */
+            position: relative;
+            z-index: 1;
+        }
+
+        .recognition .stars {
+            color: #f5c518;
+            font-size: 22px;
+            /* Increased font size */
+            margin: 10px 0;
+        }
+
+        .logo {
+            margin-top: 30px;
+            /* Adjust margin for spacing at the bottom */
+            position: relative;
+            z-index: 1;
+        }
+
+        .logo img {
+            width: 150px;
+        }
+
+        hr {
+            border: none;
+            border-top: 1px solid #fff;
+            margin: 10px 0;
+            position: relative;
+            z-index: 1;
+        }
+
+        .line {
+            width: 50%;
+            height: 1px;
+            background: #fff;
+            margin: 10px auto;
+        }
+
+        .footer-column {
+            flex: 1;
+            min-width: 200px;
+            margin: 0 20px;
+            /* Adjust margin for spacing between columns */
+        }
+
+        .footer-column h3 {
+            border-bottom: 1px solid #fff;
+            padding-bottom: 10px;
+            margin: 20px 0;
+            /* Add margin to separate sections */
+            font-size: 38px;
+            /* Increased font size for headers */
+            color: #ee5566;
+            font-weight: 100;
+            /* Thinner text */
+            position: relative;
+        }
+
+        .footer-column h3::before {
+            content: '';
+            display: block;
+            width: 100%;
+            height: 1px;
+            background: #fff;
+            position: absolute;
+            top: -20px;
+            /* Adjust the position of the line above the header */
+            left: 0;
+        }
+
+        .footer-column ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .footer-column ul li {
+            margin: 10px 0;
+            /* Adjust margin for spacing between list items */
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            font-weight: 100;
+            /* Thinner text */
+        }
+
+        .footer-column ul li a {
+            color: #fff;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+        }
+
+        .footer-column ul li a:hover {
+            color: #ee5566;
+            /* Change color on hover */
+        }
+
+        .footer-column ul li a:hover::before {
+            background-color: #ee5566;
+            /* Change icon color on hover */
+        }
+
+        /* Add styles for the icons */
+        .footer-column ul li::before {
+            content: '';
+            /* Placeholder for icon */
+            display: inline-block;
+            width: 9.65px;
+            /* Adjust width for icon */
+            height: 9.65px;
+            /* Adjust height for icon */
+            background-size: contain;
+            background-repeat: no-repeat;
+            margin-right: 8px;
+            /* Space between icon and text */
+        }
+
+        /* Specific icons for different lists */
+        .footer-column ul li.products::before,
+        .footer-column ul li.resources::before,
+        .footer-column ul li.company::before,
+        .footer-column ul li.features::before,
+        .footer-column ul li.support::before {
+            background-image: url('/images/footer\ icon.webp');
+            /* Replace with your icon URL */
+        }
+
+        /* Add spacing between the upper and lower columns */
+        .footer-column ul+h3 {
+            margin-top: 40px;
+            /* Add space above new section */
+        }
+
+        /* Specific classes for each column */
+        .products-column,
+        .resources-column,
+        .company-column,
+        .support-column,
+        .features-column {
+            flex: 1;
+            min-width: 200px;
+            margin: 0 20px;
+            /* Adjust margin for spacing between columns */
+        }
+
+        .products-column h3,
+        .resources-column h3,
+        .company-column h3,
+        .support-column h3,
+        .features-column h3 {
+            border-bottom: 1px solid #fff;
+            padding-bottom: 10px;
+            margin: 20px 0;
+            /* Add margin to separate sections */
+            font-size: 20px;
+            /* Increased font size for headers */
+            color: #ee5566;
+            font-weight: 100;
+            /* Thinner text */
+            position: relative;
+        }
+
+        .products-column ul li,
+        .resources-column ul li,
+        .company-column ul li,
+        .support-column ul li,
+        .features-column ul li {
+            margin: 10px 0;
+            /* Adjust margin for spacing between list items */
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            font-weight: 100;
+            /* Thinner text */
+        }
+
+        .products-column ul li a,
+        .resources-column ul li a,
+        .company-column ul li a,
+        .support-column ul li a,
+        .features-column ul li a {
+            color: #fff;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+        }
+
+        .products-column ul li a:hover,
+        .resources-column ul li a:hover,
+        .company-column ul li a:hover,
+        .support-column ul li a:hover,
+        .features-column ul li a:hover {
+            color: #ee5566;
+            /* Change color on hover */
+        }
+
+        .products-column ul li a:hover::before,
+        .resources-column ul li a:hover::before,
+        .company-column ul li a:hover::before,
+        .support-column ul li a:hover::before,
+        .features-column ul li a:hover::before {
+            background-color: #ee5566;
+            /* Change icon color on hover */
+        }
+
+        /* Custom icons for SUPPORT AND SERVICES */
+        .support-column ul li.phone::before {
+            background-image: url('./images/phone.webp');
+            /* Replace with your phone icon URL */
+        }
+
+        .support-column ul li.address::before {
+            background-image: url('./images/loaction.webp');
+            /* Replace with your address icon URL */
+        }
+
+        .support-column ul li.office::before {
+            background-image: url('./images/loaction.webp');
+            /* Replace with your office icon URL */
+        }
+
+        .support-column ul li.email::before {
+            background-image: url('./images/mail.webp');
+            /* Replace with your email icon URL */
+        }
+
+        .content-spacing {
+            margin-top: 10px;
+            margin-left: 100px;
+            /* Adjust this value to set the spacing */
+        }
+
+        .feature-item h4,
+        .resources-item h4 {
+            margin-bottom: 10px;
+            /* Adjust the spacing as needed */
+        }
+
+        .feature-item p,
+        .resources-item p {
+            margin-top: 0;
+            /* Ensure there's no extra margin on top of the paragraph */
+        }
+
+        .divider {
+            width: 30%;
+            height: 4px;
+            background-color: #ee5566;
+            margin: 70px 0;
+            border-radius: 100%;
+        }
+
+        /* Styles for the new form section */
+        #demo-form-section {
+            display: flex;
+            justify-content: center;
+            width: 85%;
+            background: linear-gradient(#992330, #0a0a0a);
+            border-radius: 10px;
+            padding: 20px;
+            box-sizing: border-box;
+            margin-bottom: 40px;
+            border-top: 2px solid rgb(253, 252, 252);
+            border-left: 2px solid rgb(253, 253, 253);
+            border-right: 2px solid rgb(255, 254, 254);
+        }
+
+        #demo-form {
+            display: flex;
+            flex-direction: column;
+            width: 30%;
+            padding: 20px;
+
+        }
+
+        #demo-form label {
+            color: #fff;
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        #demo-form input {
+            padding: 10px;
+            margin-bottom: 20px;
+            border: none;
+            border-radius: 5px;
+        }
+
+        #demo-form button {
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: #ee5566;
+            color: #fff;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        #demo-form button:hover {
+            background-color: #d7444a;
+        }
+
+        #demo-info {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            width: 70%;
+            padding: 20px;
+            color: #fff;
+        }
+
+        #demo-info h1 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+
+        #demo-info p {
+            font-size: 1.2em;
+            color: #ddd;
+            margin-bottom: 20px;
+        }
+
+        @media (max-width: 768px) {
+            #navbar .logo {
+                margin: 0;
+            }
+
+            #navbar .menu {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            #navbar .menu li {
+                margin: 10px 0;
+            }
+
+            #hero-section {
+                flex-direction: column;
+                height: auto;
+                text-align: center;
+            }
+
+            #hero-section .left-section,
+            #hero-section .right-section {
+                flex: none;
+                padding: 10px;
+                width: 100%;
+            }
+
+            #main-container {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            #pdf-list-container,
+            #pdf-renderer-container {
+                width: 100%;
+                margin: 0 0 20px 0;
+            }
+
+            footer {
+                flex-direction: column;
+                align-items: center;
+                padding: 20px;
+            }
+
+            .footer-column {
+                margin: 10px 0;
+            }
+
+            #demo-form-section {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            #demo-form,
+            #demo-info {
+                width: 100%;
+                padding: 10px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            #navbar .menu li a {
+                font-size: 16px;
+            }
+
+            #hero-section .left-section h1 {
+                font-size: 2em;
+            }
+
+            #hero-section .left-section p {
+                font-size: 1em;
+            }
+
+            #hero-section .right-section h2 {
+                font-size: 1.5em;
+            }
+
+            #hero-section .right-section p {
+                font-size: 1em;
+            }
+
+            #demo-info h1 {
+                font-size: 2em;
+            }
+
+            #demo-info p {
+                font-size: 1em;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <nav id="navbar">
+        <div class="logo">
+            <img src="./images/zenfire.webp" alt="ZenFire Logo">
+        </div>
+        <ul class="menu">
+            <li><a href="https://zentrades.pro/zenfire/about-us">About Us</a></li>
+            <li class="dropdown">
+                <a href="#">Features</a>
+                <div class="dropdown-content content-spacing">
+                    <div class="features-container">
+                        <div class="feature-column">
+                            <div class="feature-item">
+                                <div class="icon"><img src="./images/all features.webp" alt="Icon"></div>
+                                <div>
+                                    <h4><a href="#">All Features</a></h4>
+                                    <p>Access a comprehensive range of tools and functionalities for your business
+                                        needs.</p>
+                                </div>
+                            </div>
+                            <div class="feature-item">
+                                <div class="icon"><img src="./images/scheduling.webp" alt="Icon"></div>
+                                <div>
+                                    <h4><a href="#">Scheduling & Dispatching</a></h4>
+                                    <p>Efficiently schedule and dispatch your service appointments.</p>
+                                </div>
+                            </div>
+                            <div class="feature-item">
+                                <div class="icon"><img src="./images/mobile app.webp" alt="Icon"></div>
+                                <div>
+                                    <h4><a href="#">Mobile App</a></h4>
+                                    <p>Access your business tools and features on the go with user-friendly mobile apps.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="feature-column">
+                            <div class="feature-item">
+                                <div class="icon"><img src="./images/call booking.webp" alt="Icon"></div>
+                                <div>
+                                    <h4><a href="#">Call Booking</a></h4>
+                                    <p>Streamline appointment booking and scheduling for your services.</p>
+                                </div>
+                            </div>
+                            <div class="feature-item">
+                                <div class="icon"><img src="./images/invoicing.webp" alt="Icon"></div>
+                                <div>
+                                    <h4><a href="#">Invoicing</a></h4>
+                                    <p>Simplify your billing process and create professional invoices for your business.
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="feature-item">
+                                <div class="icon"><img src="./images/payments.webp" alt="Icon"></div>
+                                <div>
+                                    <h4><a href="#">Payments</a></h4>
+                                    <p>Accept secure and convenient payments from your customers.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="feature-column">
+                            <div class="feature-item">
+                                <div class="icon"><img src="./images/Checklist.webp" alt="Icon"></div>
+                                <div>
+                                    <h4><a href="#">Checklist</a></h4>
+                                    <p>Create and manage checklists to ensure thorough completion of tasks and services.
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="feature-item">
+                                <div class="icon"><img src="./images/reporting.webp" alt="Icon"></div>
+                                <div>
+                                    <h4><a href="#">Reporting</a></h4>
+                                    <p>Gain valuable insights into your business performance with detailed reports and
+                                        analytics.</p>
+                                </div>
+                            </div>
+                            <div class="feature-item">
+                                <div class="icon"><img src="./images/recurring inspections.webp" alt="Icon"></div>
+                                <div>
+                                    <h4><a href="#">Recurring Inspection</a></h4>
+                                    <p>Easily manage and schedule recurring inspections for your clients.</p>
+                                </div>
+                            </div>
+                            <div class="feature-item">
+                                <div class="icon"><img src="./images/quickbooks.webp" alt="Icon"></div>
+                                <div>
+                                    <h4><a href="#">QuickBook</a></h4>
+                                    <p>Seamlessly integrate your account with QuickBooks for efficient accounting.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </li>
+            <li class="dropdown">
+                <a href="#">Resources</a>
+                <div class="dropdown-content1 content-spacing">
+                    <div class="resources-container">
+                        <div class="resources-column">
+                            <div class="resources-item">
+                                <div class="icon"><img src="./images/Blogs.webp" alt="Icon"></div>
+                                <div>
+                                    <h4><a href="#">Blogs</a></h4>
+                                    <p>Read our latest blogs on various topics.</p>
+                                </div>
+                            </div>
+                            <div class="resources-item">
+                                <div class="icon"><img src="./images/Case study.webp" alt="Icon"></div>
+                                <div>
+                                    <h4><a href="#">Case Studies</a></h4>
+                                    <p>Explore our case studies for in-depth insights.</p>
+                                </div>
+                            </div>
+                            <div class="resources-item">
+                                <div class="icon"><img src="./images/Webinar.webp" alt="Icon"></div>
+                                <div>
+                                    <h4><a href="#">Webinars</a></h4>
+                                    <p>Join our informative webinars.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="resources-column">
+                            <div class="resources-item">
+                                <div class="icon"><img src="./images/tools.webp" alt="Icon"></div>
+                                <div>
+                                    <h4><a href="#">Free Tools</a></h4>
+                                    <p>Access our free tools to enhance your business.</p>
+                                </div>
+                            </div>
+                            <div class="resources-item">
+                                <div class="icon"><img src="./images/podcast.webp" alt="Icon"></div>
+                                <div>
+                                    <h4><a href="#">Podcast</a></h4>
+                                    <p>Listen to our podcast series.</p>
+                                </div>
+                            </div>
+                            <div class="resources-item">
+                                <div class="icon"><img src="./images/templates.webp" alt="Icon"></div>
+                                <div>
+                                    <h4><a href="#">Templates</a></h4>
+                                    <p>Download useful templates for your work.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="resources-column">
+                            <div class="resources-item">
+                                <div class="icon"><img src="./images/Checklist.webp" alt="Icon"></div>
+                                <div>
+                                    <h4><a href="#">Checklists</a></h4>
+                                    <p>Utilize our checklists to stay organized.</p>
+                                </div>
+                            </div>
+                            <div class="resources-item">
+                                <div class="icon"><img src="./images/Surveys.webp" alt="Icon"></div>
+                                <div>
+                                    <h4><a href="#">Surveys/Insights</a></h4>
+                                    <p>Learn about NFPA guidelines and standards.</p>
+                                </div>
+                            </div>
+                            <div class="resources-item">
+                                <div class="icon"><img src="./images/podcast.webp" alt="Icon"></div>
+                                <div>
+                                    <h4><a href="#">Podcast</a></h4>
+                                    <p>Access our glossary for quick references.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </li>
+            <li><a href="https://zentrades.pro/careers">Careers</a></li>
+            <li><a href="https://zentrades.pro/contact-us">Contact Us</a></li>
+        </ul>
+        <button class="get-demo">Get Demo</button>
+    </nav>
+    <div id="hero-section">
+        <div class="left-section">
+            <h1 id="pdf-title">PDF Title</h1>
+            <p>250+ Fire Inspection Forms at Your Fingertips
+                Access, fill, and download an extensive library NFPA and other fire inspection forms at no charge.</p>
+            <div class="search-container">
+                <input type="text" id="search-bar" placeholder="Search PDF by Name">
+                <button onclick="searchPDF()">Search</button>
+            </div>
+        </div>
+        <div class="right-section">
+            <h2>Digitize Your Inspection</h2>
+            <p>10x faster deficiency <br>
+                1 click proposals <br>
+                Real-time inspection suggestions</p>
+            <button class="get-demo1" onclick="location.href='#demo-form-section'"> <b>Request Demo</b></button>
+        </div>
+    </div>
+
+    <div class="divider"></div>
+    <!-- Divider line between hero section and PDF renderer -->
+
+    <div id="main-container">
+        <div id="pdf-list-container">
+            <ul id="pdf-list">
+                <!-- The list will be populated by JavaScript -->
+            </ul>
+        </div>
+
+        <div id="pdf-renderer-container">
+            <embed id="pdf-frame" src="" type="application/pdf"></embed>
+            <button id="print-button" onclick="openModal()">Print PDF</button>
+        </div>
+    </div>
+    <div class="divider"></div>
+
+    <!-- New form section -->
+    <div id="demo-form-section">
+        <div id="demo-form">
+            <script charset="utf-8" type="text/javascript" src="//js.hsforms.net/forms/embed/v2.js"></script>
+            <script>
+                hbspt.forms.create({
+                    region: "na1",
+                    portalId: "45865556",
+                    formId: "7ae0dbf1-69a1-45a2-bc1f-e5f9f04e8a57",
+                    onFormSubmit: function () {
+                        closeModal();
+                        printPDF();
+                    }
+                });
+            </script>
+        </div>
+        <div id="demo-info">
+            <h1>BOOK A PERSONALIZED <br>DEMO TODAY.</h1>
+            <p>Know why contractors trust us to grow their business. <br> Get a software that customizes to your
+                workflow.</p>
+        </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <footer>
+        <div class="contact-info">
+            <div class="contact-item">
+                <div class="line"></div>
+                <h4>CALL</h4>
+                <div class="line"></div>
+                <p>(206) 456-8988</p>
+                <div class="line"></div>
+            </div>
+            <div class="contact-item">
+                <h4>EMAIL</h4>
+                <div class="line"></div>
+                <p>hello@zentrades.pro</p>
+                <div class="line"></div>
+            </div>
+            <div class="recognition">
+                <p>Recognized and Praised by Field Service Businesses Nationwide</p>
+                <p class="stars">★★★★★</p>
+            </div>
+            <div class="logo">
+                <img src="./images/zenfire.webp" alt="ZenTrades Logo">
+            </div>
+        </div>
+        <div class="products-column footer-column">
+            <h3>FIRE VERTICALS</h3>
+            <ul>
+                <li class="products"><a href="https://zentrades.pro/zenfire/blog/fire-alarm-system">Fire Alarms</a></li>
+                <li class="products"><a href="#">Fire Sprinklers</a></li>
+                <li class="products"><a href="#">Fire Extinguidhers</a></li>
+                <li class="products"><a href="#">Fire Pump</a></li>
+                <li class="products"><a href="https://zentrades.pro/zenfire/blog/emergency-lighting">Emerhency Lights</a></li>
+                <li class="products"><a href="#">Fire Door</a></li>
+                <li class="products"><a href="#">Kitchen Hood</a></li>
+                <li class="products"><a href="#">Secuirtyh Systems</a></li>
+                
+            </ul>
+            <h3>RESOURCES</h3>
+            <ul>
+                <li class="resources"><a href="https://zentrades.pro/zenfire/blog/">Blogs</a></li>
+                <li class="resources"><a href="#">Case Studies</a></li>
+                <li class="resources"><a href="#">Webinars</a></li>
+                <li class="resources"><a href="#">Free Tools</a></li>
+                <li class="resources"><a href="#">Podcast</a></li>
+                <li class="resources"><a href="#">Templates</a></li>
+                <li class="resources"><a href="#">Checklists</a></li>
+                <li class="resources"><a href="#">NFPA</a></li>
+                <li class="resources"><a href="#">Glossary</a></li>
+                <li class="resources"><a href="#">Community</a></li>
+                <li class="resources"><a href="#">Forms</a></li>
+            </ul>
+        </div>
+        <div class="company-column footer-column">
+            <h3>COMPANY</h3>
+            <ul>
+                <li class="company"><a href="https://zentrades.pro/zenfire/about-us">About Us</a></li>
+                <li class="company"><a href="https://zentrades.pro/zenfire/contact-us">Contact Us</a></li>
+                <li class="company"><a href="https://zentrades.pro/privacy-policy">Privacy Policy</a></li>
+                <li class="company"><a href="https://zentrades.pro/terms-of-use">Terms Of Use</a></li>
+                <li class="company"><a href="https://zentrades.pro/referral">Referral Program</a></li>
+                <li></li>
+                <li></li>
+                <li></li>
+                <li></li>
+            </ul>
+            <h3>SUPPORT AND SERVICES</h3>
+            <ul>
+                <li class="support phone"><a href="#">(206) 456-8988</a></li>
+                <li class="support address"><a href="#">236 W 27th st Floor 12, New York, NY 10001, United States</a>
+                </li>
+                <li class="support office"><a href="#">A-302, Nyati Tech Park, New Kalyani Nagar, Wadgaon Sheri,
+                        Pune-411014</a></li>
+                <li class="support email"><a href="#">hello@zentrades.pro</a></li>
+            </ul>
+        </div>
+        <div class="features-column footer-column">
+            <h3>FEATURES</h3>
+            <ul>
+                <li class="features"><a href="#">Call Booking</a></li>
+                <li class="features"><a href="#">Configurable Forms And Deficiency Reports</a></li>
+                <li class="features"><a href="#">Estimating And Invoicing</a></li>
+                <li class="features"><a href="#">QuickBooks Integration</a></li>
+                <li class="features"><a href="#">Scheduling And Dispatching</a></li>
+                <li class="features"><a href="#">Service Agreement</a></li>
+            </ul>
+        </div>
+    </footer>
+
+    <!-- Modal HTML structure -->
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <div id="hubspot-form-modal"></div>
+        </div>
+    </div>
+
+    <script charset="utf-8" type="text/javascript" src="//js.hsforms.net/forms/embed/v2.js"></script>
+    <script>
+        const pdfList = [
+            { name: 'Preaction Deluge Sprinkler Form NFPA25', file: 'Preaction Deluge Sprinkler Form NFPA25.pdf' },
+            { name: 'Notification Appliance Power Extender Panel Supplemental NFPA72', file: 'Notification Appliance Power Extender Panel Supplemental NFPA72.pdf' },
+            { name: 'Kitchen Suppression Inspection Form NFPA96', file: 'Kitchen Suppression Inspection Form NFPA96.pdf' },
+            { name: 'Ice Plug Investigation Template Form', file: 'Ice Plug Investigation Template Form.pdf' },
+            { name: 'Contractors Material and Test Certificate for Above ground Piping Form NFPA25 Spanish', file: 'Contractors Material and Test Certificate for Above ground Piping Form NFPA25 Spanish.pdf' },
+            { name: 'CO2 Systems Inspection Form NFPA12', file: 'CO2 Systems Inspection Form NFPA12.pdf' },
+            { name: 'AES53', file: 'AES53.pdf' },
+            { name: 'AES31', file: 'AES31.pdf' },
+            { name: 'AES21', file: 'AES21.pdf' },
+            { name: 'AES7', file: 'AES7.pdf' },
+            { name: 'AES6', file: 'AES6.pdf' },
+            // Add more PDF file objects here
+        ];
+
+        const pdfListContainer = document.getElementById('pdf-list');
+        const searchBar = document.getElementById('search-bar');
+
+        pdfList.forEach((pdf) => {
+            const listItem = document.createElement('li');
+            const button = document.createElement('button');
+            button.textContent = pdf.name;
+            button.onclick = () => loadPDF(pdf.name, pdf.file);
+            listItem.appendChild(button);
+            pdfListContainer.appendChild(listItem);
+        });
+
+        function loadPDF(pdfName, pdfFileName) {
+            const pdfFrame = document.getElementById('pdf-frame');
+            const newUrl = `${window.location.pathname}?pdf=${encodeURIComponent(pdfName)}`;
+            window.history.pushState({ pdfName, pdfFileName }, '', newUrl);
+            pdfFrame.src = `/pdfs/${pdfFileName}#toolbar=0`; // Ensure correct path
+            const pdfTitle = pdfName.replace('.pdf', ''); // Remove .pdf extension
+            document.getElementById('pdf-title').textContent = pdfTitle; // Update PDF title in hero section
+        }
+
+        function loadPDFfromURL() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const pdfName = urlParams.get('pdf');
+            if (pdfName) {
+                const pdf = pdfList.find(pdf => pdf.name === pdfName);
+                if (pdf) {
+                    loadPDF(pdf.name, pdf.file);
+                }
+            }
+        }
+
+        function searchPDF() {
+            const searchTerm = searchBar.value.trim().toLowerCase().replace(/\s+/g, '');
+            const pdf = pdfList.find(pdf => pdf.name.toLowerCase().replace(/\s+/g, '').includes(searchTerm));
+            if (pdf) {
+                loadPDF(pdf.name, pdf.file);
+            } else {
+                alert('PDF not found');
+            }
+        }
+
+        function showSuggestions() {
+            const searchTerm = searchBar.value.trim().toLowerCase().replace(/\s+/g, '');
+            pdfListContainer.innerHTML = ''; // Clear the current list
+
+            pdfList.forEach((pdf) => {
+                if (pdf.name.toLowerCase().replace(/\s+/g, '').includes(searchTerm)) {
+                    const listItem = document.createElement('li');
+                    const button = document.createElement('button');
+                    button.textContent = pdf.name;
+                    button.onclick = () => loadPDF(pdf.name, pdf.file);
+                    listItem.appendChild(button);
+                    pdfListContainer.appendChild(listItem);
+                }
+            });
+
+            if (pdfListContainer.innerHTML === '') {
+                const listItem = document.createElement('li');
+                listItem.textContent = 'No results found';
+                pdfListContainer.appendChild(listItem);
+            }
+        }
+
+        // Add event listener to the search bar for input event
+        searchBar.addEventListener('input', showSuggestions);
+
+        // Load PDF if URL has a 'pdf' parameter
+        window.addEventListener('popstate', (event) => {
+            if (event.state) {
+                loadPDF(event.state.pdfName, event.state.pdfFileName);
+            } else {
+                loadPDFfromURL();
+            }
+        });
+
+        // Match the height of the list container to the renderer container
+        function matchHeight() {
+            const pdfListContainerElement = document.getElementById('pdf-list-container');
+            const pdfRendererContainerElement = document.getElementById('pdf-renderer-container');
+            pdfListContainerElement.style.height = pdfRendererContainerElement.offsetHeight + 'px';
+        }
+
+        // Call matchHeight on load and resize events
+        window.onload = () => {
+            matchHeight();
+            loadPDFfromURL();
+        };
+        window.onresize = matchHeight;
+
+        // Modal functions
+        function openModal() {
+            document.getElementById('myModal').style.display = "block";
+            // Load the HubSpot form into the modal
+            hbspt.forms.create({
+                target: '#hubspot-form-modal',
+                region: "na1",
+                portalId: "45865556",
+                formId: "fc303e84-467e-47c2-b600-494b317a1cc6",
+                onFormSubmit: function () {
+                    closeModal();
+                    printPDF();
+                }
+            });
+        }
+
+        function closeModal() {
+            document.getElementById('myModal').style.display = "none";
+        }
+
+        window.onclick = function (event) {
+            const modal = document.getElementById('myModal');
+            if (event.target === modal) {
+                modal.style.display = "none";
+            }
+        }
+
+        function printPDF() {
+            const pdfFrame = document.getElementById('pdf-frame').contentWindow;
+            pdfFrame.focus();
+            pdfFrame.print();
+        }
+
+    </script>
+</body>
+
+</html>
